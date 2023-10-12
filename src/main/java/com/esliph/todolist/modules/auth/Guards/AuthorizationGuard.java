@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.esliph.todolist.modules.auth.decorator.PathsWithAuthorization;
 import com.esliph.todolist.modules.user.IUserRepository;
+import com.esliph.todolist.services.CryptoPassword;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,17 +19,30 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.FilterChain;
 
 @Component
-public class AuthorizationGuard {
+public class AuthorizationGuard extends OncePerRequestFilter {
 
     @Autowired
     private IUserRepository userRepository;
 
-    // @Override
+    @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
+
+        var path = request.getServletPath();
+
+        if (!PathsWithAuthorization.hasPath(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         var authorization = request.getHeader("Authorization");
 
-        var authEncoded = authorization.substring("Basic".length()).trim();
+        if (authorization == null || "Basic ".length() > authorization.length()) {
+            response.sendError(401, "Basic auth invalid");
+            return;
+        }
+
+        var authEncoded = (authorization + "").substring("Basic".length()).trim();
 
         byte[] authDecode = Base64.getDecoder().decode(authEncoded);
 
@@ -41,14 +56,16 @@ public class AuthorizationGuard {
         var user = this.userRepository.findByUsername(username);
 
         if (user == null) {
-            response.sendError(0, password);
+            response.sendError(401, "User not found");
             return;
         }
 
-        var isPasswordCheck = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword().toCharArray());
+        var isPasswordCheck = CryptoPassword.verifyPassword(password, user.getPassword());
 
-        if (!isPasswordCheck.verified) {
-            response.sendError(0, password);
+        System.out.println(username + ":" + password + "\n" + isPasswordCheck + "\n" + user.toString());
+
+        if (!isPasswordCheck) {
+            response.sendError(401, "User not authorized");
             return;
         }
 

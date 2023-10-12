@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
-
 import com.esliph.todolist.common.IUseCase;
 import com.esliph.todolist.modules.user.IUserRepository;
 import com.esliph.todolist.modules.user.UserModel;
 import com.esliph.todolist.modules.user.UserModelSimple;
+import com.esliph.todolist.services.CryptoPassword;
 import com.esliph.todolist.services.ErrorResult;
 import com.esliph.todolist.services.Result;
 
@@ -34,11 +33,11 @@ public class UserCreateUseCase implements IUseCase<UserModelSimple, String> {
 
         var userInstance = new UserModel();
 
-        var passwordhashed = BCrypt.withDefaults().hashToString(12, args.getUsername().toCharArray());
+        var passwordHashed = CryptoPassword.hashPassword(args.getUsername());
 
-        userInstance.setPassword(args.getPassword());
+        userInstance.setPassword(passwordHashed);
         userInstance.setName(args.getName());
-        userInstance.setUsername(passwordhashed);
+        userInstance.setUsername(args.getUsername());
 
         var userCreated = this.userRepository.save(userInstance);
 

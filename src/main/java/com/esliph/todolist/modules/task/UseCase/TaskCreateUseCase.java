@@ -27,8 +27,6 @@ public class TaskCreateUseCase implements IUseCase<TaskModelSimple, String> {
         taskInstance.setEndAt(args.getEndAt());
         taskInstance.setPriority(args.getPriority());
 
-        System.out.println(taskInstance.toString());
-
         var userCreated = this.taskRepository.save(taskInstance);
 
         return Result.success("Task created with successfully", HttpStatus.CREATED);
