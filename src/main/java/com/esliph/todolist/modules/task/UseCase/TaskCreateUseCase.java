@@ -4,13 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
-
 import com.esliph.todolist.common.IUseCase;
 import com.esliph.todolist.modules.task.ITaskRepository;
 import com.esliph.todolist.modules.task.TaskModel;
 import com.esliph.todolist.modules.task.TaskModelSimple;
-import com.esliph.todolist.services.ErrorResult;
 import com.esliph.todolist.services.Result;
 
 @Component
@@ -30,7 +27,9 @@ public class TaskCreateUseCase implements IUseCase<TaskModelSimple, String> {
         taskInstance.setEndAt(args.getEndAt());
         taskInstance.setPriority(args.getPriority());
 
-        var userCreated = this.userRepository.save(taskInstance);
+        System.out.println(taskInstance.toString());
+
+        var userCreated = this.taskRepository.save(taskInstance);
 
         return Result.success("Task created with successfully", HttpStatus.CREATED);
     }
