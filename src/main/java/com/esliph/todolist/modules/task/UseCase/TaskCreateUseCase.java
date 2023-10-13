@@ -31,7 +31,7 @@ public class TaskCreateUseCase implements IUseCase<TaskModelSimple, String> {
 
         var now = LocalDateTime.now();
 
-        if (now.isBefore(taskInstance.getStartAt()) || now.isBefore(taskInstance.getEndAt())) {
+        if (!now.isBefore(taskInstance.getStartAt()) || !now.isBefore(taskInstance.getEndAt())) {
             return Result.failure(new ErrorResult().title("Create Task")
                     .message("Task with start/end before than current date")
                     .description("You cannot create task with start/end before than current date")
@@ -47,7 +47,16 @@ public class TaskCreateUseCase implements IUseCase<TaskModelSimple, String> {
                     HttpStatus.BAD_REQUEST);
         }
 
-        var userCreated = this.taskRepository.save(taskInstance);
+        if (args.getTitle().length() > 50) {
+            return Result.failure(
+                    new ErrorResult().title("Update task")
+                            .message("Task title cannot be biggest than 50 characters")
+                            .description("You cannot set title with biggest than 50 characters")
+                            .causes("Title"),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        this.taskRepository.save(taskInstance);
 
         return Result.success("Task created with successfully", HttpStatus.CREATED);
     }

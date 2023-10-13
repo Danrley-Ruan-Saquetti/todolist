@@ -3,8 +3,6 @@ package com.esliph.todolist.modules.auth.Guards;
 import java.util.Base64;
 import java.io.IOException;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;

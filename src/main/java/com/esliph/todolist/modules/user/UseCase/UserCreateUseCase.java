@@ -39,7 +39,7 @@ public class UserCreateUseCase implements IUseCase<UserModelSimple, String> {
         userInstance.setName(args.getName());
         userInstance.setUsername(args.getUsername());
 
-        var userCreated = this.userRepository.save(userInstance);
+        this.userRepository.save(userInstance);
 
         return Result.success("User created with successfully", HttpStatus.CREATED);
     }

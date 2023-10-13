@@ -1,7 +1,5 @@
 package com.esliph.todolist.modules.task;
 
-import java.util.UUID;
-
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,10 +29,10 @@ public class TaskController {
     private TaskUpdateUseCase taskUpdate;
 
     @PostMapping("/create")
-    public ResponseEntity create(@RequestBody TaskModelSimple taskModel, HttpServletRequest request) {
+    public ResponseEntity<Object> create(@RequestBody TaskModelSimple taskModel, HttpServletRequest request) {
         var userId = request.getAttribute("userId");
 
-        taskModel.setUserId((UUID) userId);
+        taskModel.setUserId((int) userId);
 
         var result = this.taskCreate.perform(taskModel);
 
@@ -42,19 +40,20 @@ public class TaskController {
     }
 
     @GetMapping("")
-    public ResponseEntity findAll(HttpServletRequest request) {
+    public ResponseEntity<Object> findAll(HttpServletRequest request) {
         var userId = request.getAttribute("userId");
 
-        var result = this.taskList.perform((UUID) userId);
+        var result = this.taskList.perform((int) userId);
 
         return ResponseEntity.status(result.getStatus()).body(result.getResponse());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@RequestBody TaskModel taskModel, @PathVariable UUID id, HttpServletRequest request) {
+    public ResponseEntity<Object> update(@RequestBody TaskModel taskModel, @PathVariable int id,
+            HttpServletRequest request) {
         var userId = request.getAttribute("userId");
 
-        taskModel.setUserId((UUID) userId);
+        taskModel.setUserId((int) userId);
         taskModel.setId(id);
 
         var result = this.taskUpdate.perform(taskModel);

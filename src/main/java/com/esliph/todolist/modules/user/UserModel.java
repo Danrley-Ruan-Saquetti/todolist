@@ -1,12 +1,13 @@
 package com.esliph.todolist.modules.user;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.Data;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -15,8 +16,8 @@ import org.hibernate.annotations.CreationTimestamp;
 public class UserModel {
 
     @Id()
-    @GeneratedValue(generator = "UUID")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     @Column(unique = true)
     private String username;
     private String name;

@@ -1,12 +1,13 @@
 package com.esliph.todolist.modules.task;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.Data;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -15,9 +16,9 @@ import org.hibernate.annotations.CreationTimestamp;
 public class TaskModel {
 
     @Id()
-    @GeneratedValue(generator = "UUID")
-    private UUID id;
-    private UUID userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private int userId;
     private String description;
     @Column(length = 50)
     private String title;
