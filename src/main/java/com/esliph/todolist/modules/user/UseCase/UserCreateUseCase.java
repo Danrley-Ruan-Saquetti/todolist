@@ -26,7 +26,7 @@ public class UserCreateUseCase implements IUseCase<UserModelSimple, String> {
             return Result.failure(
                     new ErrorResult().title("Create User")
                             .message("Already exists user with username \"" + args.getUsername() + "\"")
-                            .description("you cannot inform username already in use. Please, try again")
+                            .description("You cannot inform username already in use. Please, try again")
                             .causes("Username already exists"),
                     HttpStatus.BAD_REQUEST);
         }

@@ -16,6 +16,7 @@ public class TodolistApplication {
 
 	static ConfigurableApplicationContext app;
 
+	// mvn spring-boot:run
 	public static void main(String[] args) {
 		TodolistApplication.app = SpringApplication.run(TodolistApplication.class, args);
 

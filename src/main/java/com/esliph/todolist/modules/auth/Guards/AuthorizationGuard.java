@@ -69,6 +69,8 @@ public class AuthorizationGuard extends OncePerRequestFilter {
             return;
         }
 
+        request.setAttribute("userId", user.getId());
+
         filterChain.doFilter(request, response);
     }
 }
