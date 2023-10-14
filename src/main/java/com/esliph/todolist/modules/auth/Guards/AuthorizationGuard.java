@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.esliph.todolist.modules.auth.decorator.PathsWithAuthorization;
+import com.esliph.todolist.modules.auth.PathsWithAuthorization;
 import com.esliph.todolist.modules.user.IUserRepository;
 import com.esliph.todolist.services.CryptoPassword;
 
@@ -28,7 +28,7 @@ public class AuthorizationGuard extends OncePerRequestFilter {
 
         var path = request.getServletPath();
 
-        if (!PathsWithAuthorization.hasPath(path)) {
+        if (!PathsWithAuthorization.hasPath(request.getMethod(), path)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -59,8 +59,6 @@ public class AuthorizationGuard extends OncePerRequestFilter {
         }
 
         var isPasswordCheck = CryptoPassword.verifyPassword(password, user.getPassword());
-
-        System.out.println(username + ":" + password + "\n" + isPasswordCheck + "\n" + user.toString());
 
         if (!isPasswordCheck) {
             response.sendError(401, "User not authorized");

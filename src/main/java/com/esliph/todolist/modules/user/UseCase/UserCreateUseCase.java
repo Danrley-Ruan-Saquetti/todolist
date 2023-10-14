@@ -33,7 +33,7 @@ public class UserCreateUseCase implements IUseCase<UserModelSimple, String> {
 
         var userInstance = new UserModel();
 
-        var passwordHashed = CryptoPassword.hashPassword(args.getUsername());
+        var passwordHashed = CryptoPassword.hashPassword(args.getPassword());
 
         userInstance.setPassword(passwordHashed);
         userInstance.setName(args.getName());

@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.esliph.todolist.modules.auth.decorator.Authorization;
 import com.esliph.todolist.modules.task.UseCase.TaskCreateUseCase;
 import com.esliph.todolist.modules.task.UseCase.TaskListUseCase;
 import com.esliph.todolist.modules.task.UseCase.TaskUpdateUseCase;
@@ -28,6 +29,7 @@ public class TaskController {
     @Autowired
     private TaskUpdateUseCase taskUpdate;
 
+    @Authorization
     @PostMapping("/create")
     public ResponseEntity<Object> create(@RequestBody TaskModelSimple taskModel, HttpServletRequest request) {
         var userId = request.getAttribute("userId");
@@ -39,6 +41,7 @@ public class TaskController {
         return ResponseEntity.status(result.getStatus()).body(result.getResponse());
     }
 
+    @Authorization
     @GetMapping("")
     public ResponseEntity<Object> findAll(HttpServletRequest request) {
         var userId = request.getAttribute("userId");
@@ -48,7 +51,8 @@ public class TaskController {
         return ResponseEntity.status(result.getStatus()).body(result.getResponse());
     }
 
-    @PutMapping("/{id}")
+    @Authorization
+    @PutMapping("/update/{id}")
     public ResponseEntity<Object> update(@RequestBody TaskModel taskModel, @PathVariable int id,
             HttpServletRequest request) {
         var userId = request.getAttribute("userId");
